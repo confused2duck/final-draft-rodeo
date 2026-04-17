@@ -1,7 +1,14 @@
 // Shared API client for talking to the backend.
-// VITE_API_URL can override the default for prod builds.
+// VITE_API_URL can override this (e.g. for local dev pointing at a remote backend).
+// Default: in the browser, use same-origin "/api" in production (any non-localhost host),
+// and the local backend on :5000 during `vite dev`.
 
-export const API_BASE = (import.meta.env.VITE_API_URL as string | undefined) || 'http://localhost:5000/api';
+const defaultBase =
+  typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1'
+    ? '/api'
+    : 'http://localhost:5000/api';
+
+export const API_BASE = (import.meta.env.VITE_API_URL as string | undefined) || defaultBase;
 
 export const ADMIN_TOKEN_KEY = 'triprodeo_admin_token';
 
